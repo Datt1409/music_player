@@ -35,18 +35,16 @@ export default function Buttons({
 
   const handlePlayNext = () => {
     const nextIndex = (currentIndex + 1) % songs.length;
-    setCurrentIndex(nextIndex);
     audioRef.current.src = songs[nextIndex].path;
+    setCurrentIndex(nextIndex);
     setIsPlaying(true);
-    setInputValue(0);
     audioRef.current.play();
   };
   const handlePlayPrev = () => {
     const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
-    setCurrentIndex(prevIndex);
     audioRef.current.src = songs[prevIndex].path;
+    setCurrentIndex(prevIndex);
     setIsPlaying(true);
-    setInputValue(0);
     audioRef.current.play();
   };
 

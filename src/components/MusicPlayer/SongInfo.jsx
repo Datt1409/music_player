@@ -121,8 +121,9 @@ export default function SongInfo({
         </audio>
         <input
           type="range"
-          min="1"
+          min="0"
           max="100"
+          defaultValue="0"
           value={inputValue}
           step="1"
           ref={inputRef}
@@ -148,7 +149,9 @@ export default function SongInfo({
             className="text-base"
             style={{ color: "rgba(253.94, 165.06, 175.61, 0.50)" }}
           >
-            {audioRef.current ? formatTime(audioRef.current.duration) : "--:--"}
+            {audioRef.current?.duration
+              ? formatTime(audioRef.current.duration)
+              : "--:--"}
           </p>
         </div>
       </div>

@@ -11,7 +11,6 @@ export default function MusicPlayer() {
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const track = useMemo(() => songs[currentIndex], [currentIndex]);
 
   return (
