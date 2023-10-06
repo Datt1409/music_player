@@ -41,39 +41,40 @@ export default function SongInfo({
   }, [isPlaying, audioRef]);
 
   useEffect(() => {
-    const audioElement = audioRef.current;
+    const audio = audioRef.current;
     const handleTimeUpdate = () => {
-      setCurrentTime(formatTime(audioElement.currentTime));
-      const newProgress =
-        (audioElement.currentTime / audioElement.duration) * 100;
+      setCurrentTime(formatTime(audio.currentTime));
+      let newProgress;
+      if (audio.currentTime / audio.duration) {
+        newProgress = (audio.currentTime / audio.duration) * 100;
+      }
       setInputValue(newProgress);
     };
-    audioElement.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
 
-    return () =>
-      audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+    return () => audio.removeEventListener("timeupdate", handleTimeUpdate);
   }, []);
 
   useEffect(() => {
-    const audioElement = audioRef.current;
+    const audio = audioRef.current;
     const handleTrackEnded = () => {
       if (isRepeat) {
-        audioElement.currentTime = 0;
+        audio.currentTime = 0;
       } else if (isShuffle) {
         let randomIndex = Math.floor(Math.random() * (tracks.length + 1));
         setCurrentIndex(randomIndex);
-        audioElement.src = tracks[randomIndex].path;
+        audio.src = tracks[randomIndex].path;
       } else {
         const nextIndex = (currentIndex + 1) % tracks.length;
         setCurrentIndex(nextIndex);
-        audioElement.src = tracks[nextIndex].path;
+        audio.src = tracks[nextIndex].path;
       }
       setIsPlaying(true);
-      audioElement.play();
+      audio.play();
     };
-    audioElement.addEventListener("ended", handleTrackEnded);
+    audio.addEventListener("ended", handleTrackEnded);
 
-    return () => audioElement.removeEventListener("ended", handleTrackEnded);
+    return () => audio.removeEventListener("ended", handleTrackEnded);
   }, [isRepeat, isShuffle, currentIndex, audioRef]);
 
   return (
@@ -127,12 +128,10 @@ export default function SongInfo({
           ref={inputRef}
           className="accent-pink-500 cursor-pointer mb-2"
           onChange={(e) => {
-            let newInputValue = parseInt(e.target.value);
-            console.log(e.target.value);
-            const newTime = (newInputValue / 100) * audioRef.current.duration;
+            const newTime = (e.target.value / 100) * audioRef.current.duration;
             audioRef.current.currentTime = newTime;
             setCurrentTime(formatTime(newTime));
-            setInputValue(newInputValue);
+            setInputValue(e.target.value);
           }}
         />
 
