@@ -62,11 +62,14 @@ export default function SongInfo({
         audio.currentTime = 0;
       } else if (isShuffle) {
         let randomIndex = Math.floor(Math.random() * (tracks.length + 1));
+        console.log(randomIndex);
         setCurrentIndex(randomIndex);
+        setTrack(tracks[randomIndex]);
         audio.src = tracks[randomIndex].path;
       } else {
         const nextIndex = (currentIndex + 1) % tracks.length;
         setCurrentIndex(nextIndex);
+        setTrack(tracks[nextIndex]);
         audio.src = tracks[nextIndex].path;
       }
       setIsPlaying(true);
@@ -75,7 +78,7 @@ export default function SongInfo({
     audio.addEventListener("ended", handleTrackEnded);
 
     return () => audio.removeEventListener("ended", handleTrackEnded);
-  }, [isRepeat, isShuffle, currentIndex, audioRef]);
+  }, [isRepeat, isShuffle, currentIndex, audioRef.current]);
 
   return (
     <>
