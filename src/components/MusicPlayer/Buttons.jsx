@@ -18,8 +18,9 @@ export default function Buttons({
   currentIndex,
   setCurrentIndex,
   audioRef,
-  songs,
+  tracks,
   setInputValue,
+  setTrack,
 }) {
   const handlePlay = () => {
     setIsPlaying(!isPlaying);
@@ -34,16 +35,18 @@ export default function Buttons({
   };
 
   const handlePlayNext = () => {
-    const nextIndex = (currentIndex + 1) % songs.length;
-    audioRef.current.src = songs[nextIndex].path;
+    const nextIndex = (currentIndex + 1) % tracks.length;
     setCurrentIndex(nextIndex);
+    setTrack(tracks[nextIndex]);
     setIsPlaying(true);
+    audioRef.current.src = tracks[nextIndex].path;
     audioRef.current.play();
   };
   const handlePlayPrev = () => {
-    const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
-    audioRef.current.src = songs[prevIndex].path;
+    const prevIndex = (currentIndex - 1 + tracks.length) % tracks.length;
     setCurrentIndex(prevIndex);
+    setTrack(tracks[prevIndex]);
+    audioRef.current.src = tracks[prevIndex].path;
     setIsPlaying(true);
     audioRef.current.play();
   };

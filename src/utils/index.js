@@ -3,7 +3,7 @@ import andiez from "@/assets/SongImg/cho_doi_co_dang_so.jpeg";
 import kuun from "@/assets/SongImg/tinh_co_yeu_em.jpeg";
 import tuanhung from "@/assets/SongImg/gap_doi_yeu_thuong.jpeg";
 
-export const songs = [
+export const tracks = [
   {
     songName: "Chiều hôm ấy",
     singer: "Jaykii",
@@ -30,10 +30,20 @@ export const songs = [
   },
 ];
 
-export const formatTime = (timeInSeconds) => {
-  const minutes = Math.floor(timeInSeconds / 60);
-  const seconds = Math.floor(timeInSeconds % 60);
-  const formattedMinutes = minutes.toString().padStart(2, "0");
-  const formattedSeconds = seconds.toString().padStart(2, "0");
-  return `${formattedMinutes}:${formattedSeconds}`;
+// export const formatTime = (timeInSeconds) => {
+//   const minutes = Math.floor(timeInSeconds / 60);
+//   const seconds = Math.floor(timeInSeconds % 60);
+//   const formattedMinutes = minutes.toString().padStart(2, "0");
+//   const formattedSeconds = seconds.toString().padStart(2, "0");
+//   return `${formattedMinutes}:${formattedSeconds}`;
+// };
+export const formatTime = (time) => {
+  if (time && !isNaN(time)) {
+    const minutes = Math.floor(time / 60);
+    const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(time % 60);
+    const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${formatMinutes}:${formatSeconds}`;
+  }
+  return "00:00";
 };

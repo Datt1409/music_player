@@ -14,7 +14,8 @@ export default function SongInfo({
   currentIndex,
   setCurrentIndex,
   track,
-  songs,
+  tracks,
+  setTrack,
 }) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [inputValue, setInputValue] = useState(0);
@@ -59,13 +60,13 @@ export default function SongInfo({
       if (isRepeat) {
         audioElement.currentTime = 0;
       } else if (isShuffle) {
-        let randomIndex = Math.floor(Math.random() * (songs.length + 1));
+        let randomIndex = Math.floor(Math.random() * (tracks.length + 1));
         setCurrentIndex(randomIndex);
-        audioElement.src = songs[randomIndex].path;
+        audioElement.src = tracks[randomIndex].path;
       } else {
-        const nextIndex = (currentIndex + 1) % songs.length;
+        const nextIndex = (currentIndex + 1) % tracks.length;
         setCurrentIndex(nextIndex);
-        audioElement.src = songs[nextIndex].path;
+        audioElement.src = tracks[nextIndex].path;
       }
       setIsPlaying(true);
       audioElement.play();
@@ -121,15 +122,13 @@ export default function SongInfo({
         </audio>
         <input
           type="range"
-          min="0"
-          max="100"
           defaultValue="0"
           value={inputValue}
-          step="1"
           ref={inputRef}
           className="accent-pink-500 cursor-pointer mb-2"
           onChange={(e) => {
             let newInputValue = parseInt(e.target.value);
+            console.log(e.target.value);
             const newTime = (newInputValue / 100) * audioRef.current.duration;
             audioRef.current.currentTime = newTime;
             setCurrentTime(formatTime(newTime));
@@ -166,8 +165,9 @@ export default function SongInfo({
         currentIndex={currentIndex}
         setCurrentIndex={setCurrentIndex}
         audioRef={audioRef}
-        songs={songs}
+        tracks={tracks}
         setInputValue={setInputValue}
+        setTrack={setTrack}
       />
     </>
   );
