@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AiFillBackward,
   AiFillForward,
   AiOutlineShareAlt,
+  AiFillCaretLeft,
+  AiFillCaretRight,
 } from "react-icons/ai";
 import { BiShuffle } from "react-icons/bi";
+import {
+  FaVolumeHigh,
+  FaVolumeLow,
+  FaVolumeXmark,
+  FaVolumeOff,
+} from "react-icons/fa6";
 import { BsArrowRepeat, BsPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { TbDevices2, TbPlaylist } from "react-icons/tb";
 
@@ -19,9 +27,11 @@ export default function Buttons({
   setCurrentIndex,
   audioRef,
   tracks,
-  setInputValue,
   setTrack,
 }) {
+  const [volume, setVolume] = useState(60);
+  const [muteVolume, setMuteVolume] = useState(false);
+
   const handlePlay = () => {
     setIsPlaying(!isPlaying);
   };
@@ -29,6 +39,7 @@ export default function Buttons({
   const handleShuffle = () => {
     setIsShuffle(!isShuffle);
   };
+  console.log("volume", volume);
 
   const handleRepeat = () => {
     setIsRepeat(!isRepeat);
@@ -51,6 +62,31 @@ export default function Buttons({
     audioRef.current.play();
   };
 
+  const handleSkipForward = () => {
+    audioRef.current.currentTime += 15;
+  };
+
+  const handleSkipBackward = () => {
+    audioRef.current.currentTime -= 15;
+  };
+
+  const handleOnOffVolume = () => {
+    if (!muteVolume) {
+      setMuteVolume(true);
+      setVolume(0);
+    } else {
+      setMuteVolume(false);
+      setVolume(60);
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef) {
+      audioRef.current.volume = volume / 100;
+      audioRef.current.muted = muteVolume;
+    }
+  }, [volume, audioRef, muteVolume]);
+
   return (
     <>
       <div className="w-[90%] flex flex-row items-center justify-between mb-7">
@@ -59,16 +95,21 @@ export default function Buttons({
           className={`${
             isShuffle ? "text-[#FEA5B0]" : "text-white"
           } cursor-pointer`}
-          onClick={handleShuffle}
+          onClick={() => handleShuffle()}
         />
         <AiFillBackward
           size={45}
           className="text-[#FEA5B0] cursor-pointer"
-          onClick={handlePlayPrev}
+          onClick={() => handlePlayPrev()}
+        />
+        <AiFillCaretLeft
+          size={40}
+          className="text-[#FEA5B0] cursor-pointer"
+          onClick={() => handleSkipBackward()}
         />
         <div
           className="bg-[#FEA5B0] w-[60px] h-[60px] flex items-center rounded-full cursor-pointer"
-          onClick={handlePlay}
+          onClick={() => handlePlay()}
         >
           {isPlaying ? (
             <BsFillPauseFill size={36} className="mx-auto" />
@@ -76,27 +117,52 @@ export default function Buttons({
             <BsPlayFill size={36} className="mx-auto translate-x-[5%]" />
           )}
         </div>
+        <AiFillCaretRight
+          size={40}
+          className="text-[#FEA5B0] cursor-pointer"
+          onClick={() => handleSkipForward()}
+        />
         <AiFillForward
           size={45}
           className="text-[#FEA5B0] cursor-pointer"
-          onClick={handlePlayNext}
+          onClick={() => handlePlayNext()}
         />
         <BsArrowRepeat
           size={30}
           className={`${
             isRepeat ? "text-[#FEA5B0]" : "text-white"
           } cursor-pointer `}
-          onClick={handleRepeat}
+          onClick={() => handleRepeat()}
         />
       </div>
 
       {/* Social, share buttons */}
       <div className="w-[90%] flex flex-row justify-between items-center text-white text-xl mb-11 cursor-pointer">
-        {/* Device button */}
-        <TbDevices2 />
+        {/* volume button */}
+        <div className="flex flex-row items-center justify-between gap-3">
+          <div onClick={() => handleOnOffVolume()}>
+            {muteVolume || volume === 0 ? (
+              <FaVolumeXmark />
+            ) : volume < 50 && volume !== 0 ? (
+              <FaVolumeLow />
+            ) : (
+              <FaVolumeHigh />
+            )}
+          </div>
+          <input
+            className="accent-pink-500 cursor-pointer"
+            type="range"
+            value={volume}
+            min={0}
+            max={100}
+            onChange={(e) => {
+              setVolume(Number(e.target.value));
+            }}
+          />
+        </div>
         <div className="w-[20%] flex flex-row items-center justify-between">
-          <AiOutlineShareAlt />
-          <TbPlaylist />
+          <AiOutlineShareAlt size={24} />
+          <TbPlaylist size={24} />
         </div>
       </div>
     </>

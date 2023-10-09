@@ -19,7 +19,7 @@ export default function SongInfo({
 }) {
   const [isFavourite, setIsFavourite] = useState(false);
   const [inputValue, setInputValue] = useState(0);
-  const [currentTime, setCurrentTime] = useState("00:00");
+  const [timeProgress, setTimeProgress] = useState("00:00");
   const audioRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -43,7 +43,7 @@ export default function SongInfo({
   useEffect(() => {
     const audio = audioRef.current;
     const handleTimeUpdate = () => {
-      setCurrentTime(formatTime(audio.currentTime));
+      setTimeProgress(formatTime(audio.currentTime));
       let newProgress;
       if (audio.currentTime / audio.duration) {
         newProgress = (audio.currentTime / audio.duration) * 100;
@@ -126,14 +126,13 @@ export default function SongInfo({
         </audio>
         <input
           type="range"
-          defaultValue="0"
           value={inputValue}
           ref={inputRef}
           className="accent-pink-500 cursor-pointer mb-2"
           onChange={(e) => {
             const newTime = (e.target.value / 100) * audioRef.current.duration;
             audioRef.current.currentTime = newTime;
-            setCurrentTime(formatTime(newTime));
+            setTimeProgress(formatTime(newTime));
             setInputValue(e.target.value);
           }}
         />
@@ -144,7 +143,7 @@ export default function SongInfo({
             className="text-base"
             style={{ color: "rgba(253.94, 165.06, 175.61, 0.50)" }}
           >
-            {currentTime}
+            {timeProgress}
           </p>
           <p
             className="text-base"
